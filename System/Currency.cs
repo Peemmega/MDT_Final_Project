@@ -18,9 +18,9 @@ public class Currency{
         }
     }
 
-    public void PrintCurrency(){
-        Console.WriteLine($"--------------------");
-        Console.WriteLine($"[Gold] : {_Gold}");
-        Console.WriteLine($"[Gem] : {_Gem}");
+    public void Print_Currency(){
+        Console.WriteLine("--------------------------------");
+        Console.WriteLine($"[Gold] : {_Gold} [Gem] : {_Gem}");
+        Console.WriteLine("--------------------------------");
     }
 }

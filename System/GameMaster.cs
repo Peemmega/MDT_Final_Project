@@ -1,7 +1,9 @@
 public class Gamemaster {
-    Print print = new Print();
-    Data appData = new Data();
+    private Print print = new Print();
+    private Data appData = new Data();
+    private Sceen appScreen = new Sceen();
 
+    //--------------------------------------------------------------------
     public string GetString(int min_length,int max_length){
         string input_value = Console.ReadLine();
         if (input_value.Length >= min_length && input_value.Length <= max_length){
@@ -65,11 +67,18 @@ public class Gamemaster {
 
 
     public bool CheckPassWord(string user_name, string Password){
-        if (appData.GetUserFormUserName(user_name).GetPassWord() == Password){
+        Console.Clear();
+       
+        if (appData.IsUsernameInData(user_name) && appData.GetUserFormUserName(user_name).GetPassWord() == Password){
             return true;
         } else {
+            PrintNL("Username or Password incorrect");
             return false;
         }
+    }
+
+    public void LoadLobby(User user,Gamemaster master){
+        appScreen.Lobby(user,master);
     }
 
     public User Login(Gamemaster master){
@@ -87,22 +96,17 @@ public class Gamemaster {
             switch (confirm){
                 case false :
                     your_Account = Get_User(master);
-                    break; 
+                break; 
             }
 
             return your_Account;
         }
 
-       
         User your_account = Get_User(master);
-        if (CheckPassWord(your_account.GetUserName(),your_account.GetPassWord())){
-            Console.Clear();
-            master.CreateLine();
-            master.PrintNL("Login success.");
-        } else {
-            master.PrintNL("Incorrect Password");
-        }
         
+        if (!CheckPassWord(your_account.GetUserName(),your_account.GetPassWord())){
+            your_account = Login(master);
+        }
         return your_account;
     }
 
@@ -118,20 +122,60 @@ public class Gamemaster {
             switch (confirm){
                 case false :
                     your_Account = Get_User(master);
-                    break; 
+                break; 
             }
 
             return your_Account;
         }
         User your_account = Get_User(master);
-        Console.Clear();
-        master.CreateLine();
-        master.PrintNL("Register success.");
-        master.CreateUserData(your_account);
+        // Console.Clear();
+        // master.CreateLine();
+        // master.PrintNL("Register success.");
+        if (appData.IsUsernameInData(your_account.GetUserName())){
+            PrintNL("This username already use");
+            your_account = Register(master);
+        } else {
+            master.CreateUserData(your_account);
+        }
         return your_account;
     }
 
     public void ShowAllUser(){
         appData.ShowList();
+    }
+
+    public void MenuSelectionEvent(User user,Gamemaster master){
+        bool EndSelection = false;
+        while (!EndSelection){
+            Console.Write("[Select menu]: ");
+            switch(Console.ReadLine()){
+                case "Profile":
+                    PrintNL("Comming soon..");
+                break;
+                case "Quest":
+                    PrintNL("Comming soon..");
+                break;
+                case "Dungeon":
+                    PrintNL("Comming soon..");
+                break;
+                case "Shop":
+                    PrintNL("Comming soon..");
+                break;
+                case "Community":
+                    Console.Clear();
+                    PrintNL("Community");
+                break;
+                case "Chat":
+                    PrintNL("Comming soon..");
+                break;
+                case "Logout":
+                    User newUser = Program.GetUser(master);
+                    LoadLobby(newUser,master);
+                break;
+                case "Exit":
+                    EndSelection = true;
+                break;
+            }
+        }
     }
 }

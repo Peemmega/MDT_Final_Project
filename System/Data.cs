@@ -8,6 +8,11 @@ public class Data{
        return _users_Data.Count;
     }
 
+    public Data(){
+        // Admin Account for test
+        AddUserData("Peemmega",new User("Peemmega","12345678"));
+    }
+
     public void ShowList(){
         Console.WriteLine("-----------------------------------------------------------");
         foreach (KeyValuePair<string,User> user in _users_Data){

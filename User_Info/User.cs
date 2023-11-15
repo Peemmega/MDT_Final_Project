@@ -3,7 +3,7 @@ public class User{
     private string _nickname;
     private string _password;
     private int _userID;
-    private Currency _currency;
+    private Currency _currency = new Currency();
     private Stats _stats;
     private Profile _profile;
 
@@ -26,6 +26,10 @@ public class User{
     }
     public int GetUserID(){
         return _userID;
+    }
+
+    public Currency GetCurrency(){
+        return _currency;
     }
     public void ChangeUserName(){
         Gamemaster master = new Gamemaster();
