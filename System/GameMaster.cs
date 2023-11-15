@@ -3,7 +3,15 @@ public class Gamemaster {
     private Data appData = new Data();
     private Sceen appScreen = new Sceen();
 
-    //--------------------------------------------------------------------
+    // Service
+    public Data GetDataService(){
+        return appData;
+    }
+    public Sceen GetSceenService(){
+        return appScreen;
+    }
+
+    // String thing
     public string GetString(int min_length,int max_length){
         string input_value = Console.ReadLine();
         if (input_value.Length >= min_length && input_value.Length <= max_length){
@@ -14,19 +22,19 @@ public class Gamemaster {
             return GetString(min_length,max_length);
         }
     }
-    public bool YesNo(){
-        Print("Confirm ?: [Y/N] ");
+    public bool YesNo(string text){
+        Print($"{text} ?: [y/n] ");
         bool value;
         switch (Console.ReadLine()){
-            case "Y" :
+            case "y" :
                 value = true;
                 break;
-            case "N" :
+            case "n" :
                 value = false;
                 break;
             default: 
                 PrintNL("Error please try again");
-                value = YesNo();
+                value = YesNo(text);
             break;    
             }      
         return value;     
@@ -44,11 +52,8 @@ public class Gamemaster {
         print.CreateLine();
     }
 
-    public void CreateUserData(User user){
-        appData.AddUserData(user.GetUserName(),user);
-    }
+    // Login Register
 
-    //--------------------------------------------------------------------
     static string CheckPassword(Gamemaster master){
         master.Print("Password: ");
         string user_password = master.GetString(8,24);
@@ -62,9 +67,6 @@ public class Gamemaster {
             return CheckPassword(master);
         }        
     }
-
-    //--------------------------------------------------------------------
-
 
     public bool CheckPassWord(string user_name, string Password){
         Console.Clear();
@@ -91,7 +93,7 @@ public class Gamemaster {
             string user_password = master.GetString(8,24);
             User your_Account = new User(user_name,user_password);
 
-            bool confirm = master.YesNo();
+            bool confirm = master.YesNo("Confirm");
 
             switch (confirm){
                 case false :
@@ -105,7 +107,12 @@ public class Gamemaster {
         User your_account = Get_User(master);
         
         if (!CheckPassWord(your_account.GetUserName(),your_account.GetPassWord())){
-            your_account = Login(master);
+            bool confirm = master.YesNo("Want to create new account");
+            if (confirm) {
+                your_account = Register(master);
+            } else {
+                your_account = Login(master);
+            }
         }
         return your_account;
     }
@@ -118,7 +125,7 @@ public class Gamemaster {
             string user_name = master.GetString(1,20);
             string user_password = CheckPassword(master);
             User your_Account = new User(user_name,user_password);
-            bool confirm = master.YesNo();
+            bool confirm = master.YesNo("Confirm");
             switch (confirm){
                 case false :
                     your_Account = Get_User(master);
@@ -133,7 +140,12 @@ public class Gamemaster {
         // master.PrintNL("Register success.");
         if (appData.IsUsernameInData(your_account.GetUserName())){
             PrintNL("This username already use");
-            your_account = Register(master);
+            bool confirm = master.YesNo("Want to loggin");
+            if (confirm) {
+                your_account = Login(master);
+            } else {
+                your_account = Register(master);
+            }
         } else {
             master.CreateUserData(your_account);
         }
@@ -144,6 +156,34 @@ public class Gamemaster {
         appData.ShowList();
     }
 
+    // Create
+    public void CreateUserData(User user){
+        appData.AddUserData(user.GetUserName(),user);
+    }
+
+    public void CreatePost(User user, Gamemaster master){
+        Console.Write("Description: ");
+        string text = Console.ReadLine();
+        switch (text){
+            case "Back":
+            break;
+            default: // Post
+                bool sendfile = YesNo("want to add file");
+                Post newPost;
+                if (sendfile){
+                    Console.Write("add file : ");
+                    newPost = new Post(user,text,Console.ReadLine());
+                } else {
+                    newPost = new Post(user,text);
+                }
+
+                appData.AddPostData(user.GetUserName() + "_" + appData.GetPostCount() ,newPost);
+                break;
+        }
+        appScreen.Community(user,master);
+    }
+
+    // Selection
     public void MenuSelectionEvent(User user,Gamemaster master){
         bool EndSelection = false;
         while (!EndSelection){
@@ -151,28 +191,29 @@ public class Gamemaster {
             switch(Console.ReadLine()){
                 case "Profile":
                     PrintNL("Comming soon..");
-                break;
+                    break;
                 case "Quest":
                     PrintNL("Comming soon..");
-                break;
+                    break;
                 case "Dungeon":
                     PrintNL("Comming soon..");
-                break;
+                    break;
                 case "Shop":
                     PrintNL("Comming soon..");
-                break;
+                    break;
                 case "Community":
-                    Console.Clear();
-                    PrintNL("Community");
-                break;
+                    EndSelection = true;
+                    appScreen.Community(user,master);
+                    break;
                 case "Chat":
                     PrintNL("Comming soon..");
-                break;
+                    break;
                 case "Logout":
+                    EndSelection = true;
                     User newUser = Program.GetUser(master);
                     LoadLobby(newUser,master);
-                break;
-                case "Exit":
+                    break;
+                case "exit":
                     EndSelection = true;
                 break;
             }

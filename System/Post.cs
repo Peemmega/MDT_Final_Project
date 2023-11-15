@@ -1,6 +1,6 @@
 public class Post{
     private User _creator;
-    private int _like = 0;
+    private List<User> _liked = new List<User>();
     private string _file = "-";
     private string _description;
     
@@ -15,4 +15,19 @@ public class Post{
         _description = text;
         _file = file;
     }
+    public User GetUser(){
+        return _creator;
+    }
+    public string GetDescription(){
+        return _description;
+    }
+    public int GetLikeCount(){
+        return _liked.Count;
+    }
+    public string GetFile(){
+        return _file;
+    }
 }
+
+
+

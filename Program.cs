@@ -8,6 +8,7 @@ class Program {
     }
 
     public static User GetUser(Gamemaster gamemaster){
+        Console.Clear();
         gamemaster.PrintNL(" Welcome to Media Adventure ");
         gamemaster.PrintNL(" Create Work by Nhakluamak Group ");
         gamemaster.PrintNL(" Choice: [1 Login] [2 Register] ");

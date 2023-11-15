@@ -2,7 +2,6 @@ public class User{
     private string _username;
     private string _nickname;
     private string _password;
-    private int _userID;
     private Currency _currency = new Currency();
     private Stats _stats;
     private Profile _profile;
@@ -23,9 +22,6 @@ public class User{
     }
     public Stats GetStats(){
         return _stats;
-    }
-    public int GetUserID(){
-        return _userID;
     }
 
     public Currency GetCurrency(){
