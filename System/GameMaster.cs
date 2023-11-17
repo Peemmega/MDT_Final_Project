@@ -183,32 +183,84 @@ public class Gamemaster {
         appScreen.Community(user,master);
     }
 
+        public void ShareStagePost(User user, Gamemaster master, string text, Stage stage){
+            Post newPost = new Post(user,text,stage.GetName() + ".url");
+            appData.AddPostData(user.GetUserName() + "_" + appData.GetPostCount() ,newPost);
+        }
+
+
+    public void LikePost(User user, Gamemaster master, string postID){
+        Post post = appData.GetPostData(postID);
+        if (post != null) {
+            post.LikePost(user);
+        } else {
+            PrintNL("No post data");
+        }
+        appScreen.Community(user,master);
+    }
+
+    public void PlayStage(User user, Gamemaster master, string stageID){
+        Console.Clear();
+        Stage stageData = appData.GetStageData(stageID);
+        if (stageData != null) {
+            appData.PrintStageInfomation(stageData);
+            
+            Console.WriteLine("{play} {invite} {back}");
+            bool Select = false;
+            while (!Select){
+                switch (Console.ReadLine()){
+                    case "play":
+                        Select = true;
+                        Console.Clear();
+                        Console.WriteLine($"[Loding] : {stageData.GetName()}");
+                        appScreen.InGame(user,master,stageData);
+                        break;
+                    case "invite":
+                        Console.WriteLine("Coming soon...?");
+                        break;
+                    case "back":
+                        Select = true;
+                        appScreen.Dungeon(user,master);
+                        break;
+                }
+            }
+
+        } else {
+            appScreen.Dungeon(user,master);
+        }   
+    }
+
+
+
+
     // Selection
     public void MenuSelectionEvent(User user,Gamemaster master){
         bool EndSelection = false;
         while (!EndSelection){
             Console.Write("[Select menu]: ");
             switch(Console.ReadLine()){
-                case "Profile":
+                case "profile":
+                    EndSelection = true;
+                    appScreen.Profile(user,master);
+                    break;
+                case "quest":
                     PrintNL("Comming soon..");
                     break;
-                case "Quest":
+                case "dungeon":
+                    EndSelection = true;
+                    appScreen.Dungeon(user,master);
+                    break;
+                case "shop":
                     PrintNL("Comming soon..");
                     break;
-                case "Dungeon":
-                    PrintNL("Comming soon..");
-                    break;
-                case "Shop":
-                    PrintNL("Comming soon..");
-                    break;
-                case "Community":
+                case "community":
                     EndSelection = true;
                     appScreen.Community(user,master);
                     break;
-                case "Chat":
+                case "chat":
                     PrintNL("Comming soon..");
                     break;
-                case "Logout":
+                case "logout":
                     EndSelection = true;
                     User newUser = Program.GetUser(master);
                     LoadLobby(newUser,master);

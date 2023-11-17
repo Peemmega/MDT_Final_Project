@@ -27,6 +27,16 @@ public class Post{
     public string GetFile(){
         return _file;
     }
+
+    public void LikePost(User user){
+        if (_liked.Contains(user)){
+            _liked.Remove(user); 
+        } else {
+            _liked.Add(user); 
+        }
+    }
+
+    
 }
 
 

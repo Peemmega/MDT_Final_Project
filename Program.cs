@@ -11,14 +11,14 @@ class Program {
         Console.Clear();
         gamemaster.PrintNL(" Welcome to Media Adventure ");
         gamemaster.PrintNL(" Create Work by Nhakluamak Group ");
-        gamemaster.PrintNL(" Choice: [1 Login] [2 Register] ");
+        gamemaster.PrintNL(" Choice: [login] [register] ");
         User returnVal;
         
         switch (Console.ReadLine()){
-            case "1":
+            case "login":
                 returnVal = gamemaster.Login(gamemaster);
                 break;
-            case "2":
+            case "register":
                 returnVal = gamemaster.Register(gamemaster);
                 break;   
             default:

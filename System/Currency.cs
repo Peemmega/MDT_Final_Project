@@ -4,8 +4,10 @@ public class Currency{
 
     public void Add(string currency,int value){
         if (currency == "Gold"){
+            Console.WriteLine($"[Gold] {_Gold} -> {_Gold + value}");
             _Gold += value;
         } else if (currency == "Gem"){
+            Console.WriteLine($"[Gem] {_Gem} -> {_Gem + value}");
             _Gem += value;
         }
     }
@@ -21,6 +23,5 @@ public class Currency{
     public void Print_Currency(){
         Console.WriteLine("--------------------------------");
         Console.WriteLine($"[Gold] : {_Gold} [Gem] : {_Gem}");
-        Console.WriteLine("--------------------------------");
     }
 }
