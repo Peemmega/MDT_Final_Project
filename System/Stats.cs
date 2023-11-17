@@ -13,16 +13,16 @@ public class Stats{
         return _exp;
     }
     public int GetHP(){
-        return _hp  * ((_level * 3 )/ 2);
+        return (int) (_hp  *  (1 + ((_level-1) * 0.5)));
     }
     public int GetATK(){
-        return _attack  * ((_level * 3 )/ 2);
+        return (int) (_attack  *  (1 + ((_level-1) * 0.5)));
     }
     public int GetDEF(){
-        return _defend  * ((_level * 3 )/ 2);
+        return (int) (_defend  *  (1 + ((_level-1) * 0.5)));
     }
     public int GetSPD(){
-        return _speed  * ((_level * 3 )/ 2);
+        return (int) (_speed  *  (1 + ((_level-1) * 0.5)));
     }
 
     public Stats(){
@@ -48,7 +48,7 @@ public class Stats{
     public void AddEXP(int val){
         Console.WriteLine($"[ Exp ] {_exp}/{_level * 250} -> {_exp + val}/{_level * 250}");
         _exp += val;
-        if (_exp >= (_level * 250)){
+        while (_exp >= (_level * 250)) {
             LevelUp();
         }
     }   
@@ -56,9 +56,9 @@ public class Stats{
     public void ShowStats (){
         Console.WriteLine("-----------------------------------------------------------");
         Console.WriteLine($"[Stats] lv: {_level} exp: {_exp}/{_level * 250}");
-        Console.WriteLine($"[HP] {_hp * _level}");
-        Console.WriteLine($"[ATK] {_attack * _level}");
-        Console.WriteLine($"[DEF] {_defend * _level}");
-        Console.WriteLine($"[SPD] {_speed * _level}");
+        Console.WriteLine($"[HP] {GetHP()}");
+        Console.WriteLine($"[ATK] {GetATK()}");
+        Console.WriteLine($"[DEF] {GetDEF()}");
+        Console.WriteLine($"[SPD] {GetSPD()}");
     }
 }

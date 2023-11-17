@@ -265,6 +265,9 @@ public class Gamemaster {
                     User newUser = Program.GetUser(master);
                     LoadLobby(newUser,master);
                     break;
+                case "I'm Batman":
+                    user.GetStats().AddEXP(5000);
+                break;   
                 case "exit":
                     EndSelection = true;
                 break;

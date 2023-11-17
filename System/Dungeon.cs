@@ -51,7 +51,12 @@ public class Stage {
     }
     public void ShowEnemyList(){
         foreach (Monster monster in _monsterOnStage){
-            Console.Write($"[{monster.GetName()} HP:{monster.GetHP()}] ");
+            if (monster.GetHP() > 0){
+                Console.Write($"[{monster.GetName()} HP:{monster.GetHP()}] ");
+            } else {
+                Console.Write($"[ - ] ");
+            }
+            
         }
     }
 }
