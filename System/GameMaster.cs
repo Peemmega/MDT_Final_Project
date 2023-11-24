@@ -207,7 +207,7 @@ public class Gamemaster {
     public void AddNameSkin(User user, NameSkin skin){
         user.NameSkin_Inventory().Add(skin.GetName(),skin);
     }
-
+   
     public void CreatePost(User user, Gamemaster master){
         Console.Write("Description: ");
         string text = Console.ReadLine();
@@ -235,14 +235,6 @@ public class Gamemaster {
         appData.AddPostData(user.GetUserName() + "_" + appData.GetPostCount() ,newPost);
     }
 
-    public void LikePost(User user, Gamemaster master, string postID){
-        Post post = appData.GetPostData(postID);
-        if (post != null) {
-            post.LikePost(user);
-        } else {
-            PrintNL("No post data");
-        }
-    }
 
     public void PlayStage(User user, Gamemaster master, string stageID){
         Console.Clear();

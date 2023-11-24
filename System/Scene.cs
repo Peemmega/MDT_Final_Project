@@ -21,7 +21,7 @@ public class Sceen{
         Console.WriteLine($"[Follows {user.GetFollow().Count}] [Followers {user.GetFollower().Count}]");
         master.GetDataService().ShowPost(user);
 
-        Console.WriteLine("{post} {like} {change name} {set bio} {back}");
+        Console.WriteLine("{post} {check post} {change name} {set bio} {back}");
         bool Select = false;
         while (!Select){
             switch (Console.ReadLine()){
@@ -30,12 +30,12 @@ public class Sceen{
                     master.CreatePost(user,master);
                     Profile(user, master);
                     break;
-                case "like":
+                 case "check post":  
                     Select = true;
                     Console.Write("Put postID: ");
                     string postID = Console.ReadLine();
-                    master.LikePost(user,master,postID);
-                    Profile(user, master);
+                    CheckPost(user,master,postID);
+                    Profile(user,master);
                     break;
                 case "change name":
                     Select = true;
@@ -65,19 +65,19 @@ public class Sceen{
         Console.WriteLine($"[Follows {searh_user.GetFollow().Count}] [Followers {searh_user.GetFollower().Count}]");
         master.GetDataService().ShowPost(searh_user);
 
-        Console.WriteLine("{follow} {like} {back}");
+        Console.WriteLine("{follow} {check post} {back}");
         bool Select = false;
         while (!Select){
             switch (Console.ReadLine()){
                 case "follow":
                     master.Follow(user,searh_user);
                     break;
-                case "like":
+                 case "check post":  
                     Select = true;
                     Console.Write("Put postID: ");
                     string postID = Console.ReadLine();
-                    master.LikePost(user,master,postID);
-                    Profile(user, master,searh_user);
+                    CheckPost(user,master,postID);
+                    Profile(user, master, searh_user);
                     break;
                 case "back":
                     Select = true;
@@ -169,11 +169,59 @@ public class Sceen{
         }
     }
 
+    public void CheckPost(User user, Gamemaster master, string postID){
+        Console.Clear();
+        if (master.GetDataService().GetPostData(postID) != null){
+            Console.WriteLine("--------------------- [ Post ] -----------------------");
+            int showPostLimit = 5;
+            Post post = master.GetDataService().GetPostData(postID);            
+            
+            Console.WriteLine($"[Post ID:{post}]");
+            Console.WriteLine($"[Username] {post.GetUser().GetUserNameSkin()}");
+            Console.WriteLine($"- {post.GetDescription()}");
+
+            if (post.GetFile() != "-"){
+                Console.WriteLine($"[File] {post.GetFile()}");
+            }
+            Console.WriteLine($"[Like : {post.GetLikeCount()}]");
+            Console.WriteLine("------- [ Comment ] -------");
+            int max = post.GetComment().Count-1;
+            for (int i = max - showPostLimit ; i >= max; i--){
+                if (i >= 0 && post.GetComment()[i] != null){
+                    Console.WriteLine($"{post.GetComment()[i]}");   
+                }   
+            }
+
+            Console.WriteLine("{like} {comment} {back}");
+            bool Select = false;
+            while (!Select){
+                switch (Console.ReadLine()){
+                    case "comment":  
+                        Select = true;
+                        Console.Write("[Text your comment]");
+                        post.Comment(user,Console.ReadLine());
+                        CheckPost(user, master, postID);
+                        break;
+                    case "like":
+                        Select = true;
+                        post.LikePost(user);
+                        CheckPost(user, master, postID);
+                        break;
+                    case "back":
+                        Select = true;
+                        break;
+                }
+            }
+        } else {
+            Console.WriteLine("[No data]");
+        }
+    }
+
     public void Community(User user, Gamemaster master){
         Console.Clear();
         Console.WriteLine("[ Community ]");
         master.GetDataService().ShowPost();
-        Console.WriteLine("{post} {like} {back}");
+        Console.WriteLine("{post} {check post} {back}");
         bool Select = false;
         while (!Select){
             switch (Console.ReadLine()){
@@ -182,13 +230,14 @@ public class Sceen{
                     master.CreatePost(user,master);
                     Community(user,master);
                     break;
-                case "like":
+                case "check post":  
                     Select = true;
                     Console.Write("Put postID: ");
                     string postID = Console.ReadLine();
-                    master.LikePost(user,master,postID);
+                    CheckPost(user,master,postID);
                     Community(user, master);
                     break;
+
                 case "back":
                     Select = true;
                     Lobby(user,master);
