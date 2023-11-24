@@ -28,6 +28,7 @@ public class Data{
     public Data(){
         // Admin Account for test
         AddUserData("Peemmega",new User("Peemmega","12345678"));
+        AddUserData("Shoko",new User("Shoko","12345678"));
         // Create Monster Data
         CreateStageData();
     }

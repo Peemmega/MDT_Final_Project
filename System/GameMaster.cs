@@ -119,6 +119,7 @@ public class Gamemaster {
                 your_account = Login(master);
             }
         }
+        your_account = master.GetDataService().GetUserFormUserName(your_account.GetUserName());
         return your_account;
     }
 
@@ -161,6 +162,20 @@ public class Gamemaster {
         appData.ShowList();
     }
 
+    // Follow
+    public void Follow(User user, User follow){
+        if (user != follow){
+            if (user.GetFollow().Contains(follow)){
+                Console.WriteLine($"[{user.GetUserName()} unfollowed {follow.GetUserName()}]");
+                user.GetFollow().Remove(follow);
+                follow.GetFollower().Remove(user);
+            } else {
+                Console.WriteLine($"[{user.GetUserName()} followed {follow.GetUserName()}]");
+                user.GetFollow().Add(follow);
+                follow.GetFollower().Add(user);
+            }
+        }
+    }
 
     // Use Item
     public void Use(User user, Gamemaster master, int rank){
@@ -171,14 +186,16 @@ public class Gamemaster {
     }
 
     public void Use(User user, Gamemaster master, string boughtname){
-        NameSkin skin = user.NameSkin_Inventory()[boughtname];
-        if (skin != null){
-            skin.Use(user);
-        } else {
-            Console.WriteLine($"[Fail] Dont have this skin");
+        if (user.NameSkin_Inventory().ContainsKey(boughtname)) {
+            NameSkin skin = user.NameSkin_Inventory()[boughtname];
+            if (skin != null){
+                skin.Use(user);
+            } else {
+                Console.WriteLine($"[Fail] Dont have this skin");
+            }
         }
     }
-    
+
     // Create
     public void CreateUserData(User user){
         appData.AddUserData(user.GetUserName(),user);
@@ -210,14 +227,13 @@ public class Gamemaster {
                 appData.AddPostData(user.GetUserName() + "_" + appData.GetPostCount() ,newPost);
                 break;
         }
-        appScreen.Community(user,master);
     }
 
-        public void ShareStagePost(User user, Gamemaster master, string text, Stage stage){
-            Post newPost = new Post(user,text,stage.GetName() + ".url");
-            appData.AddPostData(user.GetUserName() + "_" + appData.GetPostCount() ,newPost);
-        }
-
+        
+    public void ShareStagePost(User user, Gamemaster master, string text, Stage stage){
+        Post newPost = new Post(user,text,stage.GetName() + ".url");
+        appData.AddPostData(user.GetUserName() + "_" + appData.GetPostCount() ,newPost);
+    }
 
     public void LikePost(User user, Gamemaster master, string postID){
         Post post = appData.GetPostData(postID);
@@ -226,12 +242,14 @@ public class Gamemaster {
         } else {
             PrintNL("No post data");
         }
-        appScreen.Community(user,master);
     }
 
     public void PlayStage(User user, Gamemaster master, string stageID){
         Console.Clear();
         Stage stageData = appData.GetStageData(stageID);
+        List<User> party = new List<User>();
+        party.Add(user);
+
         if (stageData != null) {
             appData.PrintStageInfomation(stageData);
             
@@ -243,10 +261,25 @@ public class Gamemaster {
                         Select = true;
                         Console.Clear();
                         Console.WriteLine($"[Loding] : {stageData.GetName()}");
-                        appScreen.InGame(user,master,stageData);
+                        appScreen.InGame(user,master,stageData,party);
                         break;
                     case "invite":
-                        Console.WriteLine("Coming soon...?");
+                        Console.WriteLine("[Follow List]");
+                        appScreen.ShowFollow(user);
+                        Console.Write("[Input username to invite] ");
+                        string invited = Console.ReadLine();
+                        if (GetDataService().GetUserFormUserName(invited) != null){
+                            bool inParty = party.Contains(GetDataService().GetUserFormUserName(invited));
+                            if (user.GetFollow().Contains(GetDataService().GetUserFormUserName(invited))){
+                                if (inParty){
+                                    Console.WriteLine($"{GetDataService().GetUserFormUserName(invited).GetUserNameSkin()} already join your party!");
+                                } else {
+                                    party.Add(GetDataService().GetUserFormUserName(invited));
+                                    Console.WriteLine($"{GetDataService().GetUserFormUserName(invited).GetUserNameSkin()} join your party!");
+                                }
+                            }
+                        } 
+                        
                         break;
                     case "back":
                         Select = true;
@@ -271,6 +304,10 @@ public class Gamemaster {
                     EndSelection = true;
                     appScreen.Profile(user,master);
                     break;
+                case "friend":
+                    EndSelection = true;
+                    appScreen.Friend(user,master);
+                    break;    
                 case "dungeon":
                     EndSelection = true;
                     appScreen.Dungeon(user,master);
@@ -297,7 +334,8 @@ public class Gamemaster {
                     LoadLobby(newUser,master);
                     break;
                 case "I'm Batman":
-                    user.GetStats().AddEXP(5000);
+                    user.GetStats().AddEXP(50000);
+                    user.GetCurrency().Add("Gold",5000);
                 break;   
                 case "exit":
                     EndSelection = true;

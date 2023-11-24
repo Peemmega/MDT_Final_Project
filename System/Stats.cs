@@ -54,7 +54,7 @@ public class Stats{
     }   
 
     public void ShowStats (){
-        Console.WriteLine("-----------------------------------------------------------");
+        Console.WriteLine("--------------------------------");
         Console.WriteLine($"[Stats] lv: {_level} exp: {_exp}/{_level * 250}");
         Console.WriteLine($"[HP] {GetHP()}");
         Console.WriteLine($"[ATK] {GetATK()}");

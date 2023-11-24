@@ -2,13 +2,15 @@ public class User{
     private string _username;
     private string _nickname;
     private string _password;
+    private int _hp;
+    private int _blockValue = 0;
     private Currency _currency = new Currency();
     private Stats _stats;
     private Profile _profile;
-    private int _hp;
-    private int _blockValue = 0;
     private List<Item> _Item_Inventory = new List<Item>();
     private Dictionary<string,NameSkin> _MyNameSkin = new Dictionary<string,NameSkin>();
+    private List<User> _follow = new List<User>();
+    private List<User> _follower = new List<User>();
 
     public User(string userName,string password){
         _username = userName;
@@ -18,9 +20,16 @@ public class User{
         _profile = new Profile();
         _hp = _stats.GetHP();
     }
-     public string GetUserName(){
+    public string GetUserName(){
         return _username;
-     }
+    }
+
+    public List<User> GetFollow(){
+        return _follow;
+    }
+    public List<User> GetFollower(){
+        return _follower;
+    }
 
     public string GetUserNameSkin(){
         NameSkin skin = _profile.GetNameSkin();
@@ -85,19 +94,34 @@ public class User{
             Console.WriteLine($"[ {skin.Value.GetName()} ]");
         }
     }   
-    public void ChangeUserName(){
-        Gamemaster master = new Gamemaster();
-        Console.Write("New Username: ");
+    public void ChangeUserName(Gamemaster master){
+        Console.Write("New username: ");
         string user_name = master.GetString(1,20);
-        Console.WriteLine("Confirm your account?????: [Y/N]");
+        Console.WriteLine("Confirm new username?????: [y/n]");
 
         switch (Console.ReadLine()){
-             case "Y" :
-                master.Print("Change Username to " + user_name);
+             case "y" :
+                master.Print("Change username to " + user_name);
                 _username = user_name;
                 break;
             default: 
                 master.Print("Cancel name change");
+                break;       
+         }
+    }
+
+    public void ChangeBio(Gamemaster master){
+        Console.Write("New Bio: ");
+        string newBio = master.GetString(1,20);
+        Console.WriteLine("Confirm your new bio?????: [y/n]");
+
+        switch (Console.ReadLine()){
+             case "y" :
+                master.Print("Change bio to: " + newBio);
+                _profile.Set_Bio(newBio);
+                break;
+            default: 
+                master.Print("Cancel bio change");
                 break;       
          }
     }

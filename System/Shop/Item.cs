@@ -19,6 +19,8 @@ public class Item {
                 user.RecoveryHP(10);
             } else if (_name == "Big Potion"){
                 user.RecoveryHP(25);
+            } else if (_name == "Super Potion"){
+                user.RecoveryHP(100);
             }
             user.Item_Inventory().Remove(this);
     }

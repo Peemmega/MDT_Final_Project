@@ -7,8 +7,9 @@ public class Shop{
         _NameSkin.Add("Winter", new NameSkin("Winter","[W_","_W]",100));
         _NameSkin.Add("Yinyang", new NameSkin("Yinyang","[6_","_9]",100));
         
-        _Items.Add("Potion", new Item("Potion",50));
-        _Items.Add("Big Potion",new Item("Big Potion",150));
+        _Items.Add("Potion", new Item("Potion",20));
+        _Items.Add("Big Potion",new Item("Big Potion",50));
+        _Items.Add("Super Potion",new Item("Super Potion",200));
     }
 
     public void ShowItemList(){

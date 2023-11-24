@@ -21,4 +21,8 @@ public class Profile {
     public void SetNameSkin(NameSkin skin){
         _NameSkin = skin;
     }
+
+    public void Set_Bio(string bio){
+        _profile_Bio = bio;
+    }
 }
