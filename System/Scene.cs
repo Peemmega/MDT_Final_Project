@@ -4,16 +4,18 @@ public class Sceen{
     public void Lobby(User user, Gamemaster master){
         Console.Clear();
         Console.WriteLine($"[ Welcome to Media Adventure {user.GetUserName()} ]");
-        Console.WriteLine($"[User] {user.GetUserName()} Lv:{user.GetStats().GetLevel()} exp: {user.GetStats().GetEXP()}/{user.GetStats().GetLevel() * 250}");
+        Console.WriteLine($"[User] {user.GetUserNameSkin()} Lv:{user.GetStats().GetLevel()} exp: {user.GetStats().GetEXP()}/{user.GetStats().GetLevel() * 250}");
         user.GetCurrency().Print_Currency();
-        Console.WriteLine("{profile} {quest} {dungeon} {shop} {community} {chat} {logout} {exit}");
+        Console.WriteLine("{profile} {friend} {dungeon} {shop} {community} {inventory} {chat} {logout} {exit}");
         master.MenuSelectionEvent(user,master);
     }
 
     public void Profile(User user, Gamemaster master){
         Console.Clear();
         Console.WriteLine("[ Profile ]");
-        Console.WriteLine($"[User] {user.GetUserName()} Lv:{user.GetStats().GetLevel()}");
+        Console.WriteLine($"[User] {user.GetUserNameSkin()} Lv:{user.GetStats().GetLevel()}");
+        Console.WriteLine($"[Profile] {user.GetProfile().GetImage()} [Banner] {user.GetProfile().GetBanner()}");
+        Console.WriteLine($"[Bio] {user.GetProfile().GetBio()}");
         user.GetCurrency().Print_Currency();
 
         user.GetStats().ShowStats();
@@ -32,6 +34,41 @@ public class Sceen{
                     Console.Write("Put postID: ");
                     string postID = Console.ReadLine();
                     master.LikePost(user,master,postID);
+                    break;
+                case "back":
+                    Select = true;
+                    Lobby(user,master);
+                    break;
+            }
+        }
+    }
+
+    public void Inventory(User user, Gamemaster master){
+        Console.WriteLine("[ Inventory ]");
+        Console.WriteLine("--------------------- [ Items ] -----------------------");
+        user.ShowItemList();
+        Console.WriteLine("--------------------- [ Cosmatic ] -----------------------");
+        user.ShowNameSkinList();
+        Console.WriteLine($"[{user.GetUserNameSkin()}] HP: {user.GetHP()}");
+        bool Select = false;
+        while (!Select){
+            Console.WriteLine("{use} {back}");
+            switch (Console.ReadLine()){
+                case "use":
+                    Console.Write("[Use] Input text in side [] to use: ");
+                    string findItem = Console.ReadLine();
+                    int list = 0;
+
+                    if (int.TryParse(findItem, out list)){
+                        Console.Clear();
+                        master.Use(user,master,list);
+                        Inventory(user,master);
+                    } else {
+                        Console.Clear();
+                        master.Use(user,master,findItem);
+                        Inventory(user,master);
+                    }
+
                     break;
                 case "back":
                     Select = true;
@@ -66,6 +103,30 @@ public class Sceen{
             }
         }
     }
+
+    public void Shop(User user, Gamemaster master){
+        Console.Clear();
+        Console.WriteLine("[ Shop ]");
+        master.GetShopService().ShowCosmaticList(user);
+        master.GetShopService().ShowItemList();
+        user.GetCurrency().Print_Currency();
+        bool Select = false;
+        while (!Select){
+            Console.WriteLine("{buy} {back}");
+            switch (Console.ReadLine()){
+                case "buy":
+                    Console.Write("[What do you want to buy?]: ");
+                    master.GetShopService().Buy(user,master,Console.ReadLine());
+                    break;
+                case "back":
+                    Select = true;
+                    Lobby(user,master);
+                    break;
+            }
+        }
+    }
+   
+
     public void Dungeon(User user, Gamemaster master){
         Console.Clear();
         Console.WriteLine("[ Dungeon ]");
@@ -100,7 +161,7 @@ public class Sceen{
             stage.ShowEnemyList();
             Console.WriteLine("");
             Console.WriteLine("-----------------------------------");
-            Console.WriteLine($"[{user.GetUserName()}] HP: {user.GetHP()}");
+            Console.WriteLine($"[{user.GetUserNameSkin()}] HP: {user.GetHP()}");
             Console.WriteLine("{attack} {block} {item} {exit}");
 
             user.ReduceBlockValue();
@@ -140,10 +201,10 @@ public class Sceen{
                         monster.ReduceBlockValue();
 
                         if (action > 40) { // Attack 60%
-                            Console.WriteLine($"[{monster.GetName()} Action] - Attack to {user.GetUserName()}");
+                            Console.WriteLine($"[{monster.GetName()} Action] - Attack to {user.GetUserNameSkin()}");
                             if (user.GetBlockValue() > 0){ // On Block
                                 int dealDMG = Math.Clamp(monster.GetStats().GetATK() - user.GetStats().GetDEF(),1,999);
-                                Console.WriteLine($"[{user.GetUserName()}] blocked reduce dmg from {monster.GetStats().GetATK()} to {dealDMG}");
+                                Console.WriteLine($"[{user.GetUserNameSkin()}] blocked reduce dmg from {monster.GetStats().GetATK()} to {dealDMG}");
                                 user.TakeDamage(dealDMG);
                             } else { // Without Block
                                 user.TakeDamage(monster.GetStats().GetATK());
@@ -236,7 +297,7 @@ public class Sceen{
         static void Reset(ref User user,ref Stage stage){
             foreach (Monster monster in stage.GetMonster()){
                 monster.RecoveryToMaxHP();
-                user.RecoveryToMaxHP();
+                //user.RecoveryToMaxHP();
             }
 
         }

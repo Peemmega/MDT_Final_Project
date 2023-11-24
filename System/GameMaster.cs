@@ -1,7 +1,9 @@
+
 public class Gamemaster {
     private Print print = new Print();
     private Data appData = new Data();
     private Sceen appScreen = new Sceen();
+    private Shop _shop_Data = new Shop();
 
     // Service
     public Data GetDataService(){
@@ -9,6 +11,9 @@ public class Gamemaster {
     }
     public Sceen GetSceenService(){
         return appScreen;
+    }
+    public Shop GetShopService(){
+        return _shop_Data;
     }
 
     // String thing
@@ -156,9 +161,34 @@ public class Gamemaster {
         appData.ShowList();
     }
 
+
+    // Use Item
+    public void Use(User user, Gamemaster master, int rank){
+        Item item = user.Item_Inventory()[rank];
+        if (item != null){
+            item.Use(user);
+        }
+    }
+
+    public void Use(User user, Gamemaster master, string boughtname){
+        NameSkin skin = user.NameSkin_Inventory()[boughtname];
+        if (skin != null){
+            skin.Use(user);
+        } else {
+            Console.WriteLine($"[Fail] Dont have this skin");
+        }
+    }
+    
     // Create
     public void CreateUserData(User user){
         appData.AddUserData(user.GetUserName(),user);
+    }
+    public void AddItem(User user, Item item){
+        user.Item_Inventory().Add(item);
+    }
+
+    public void AddNameSkin(User user, NameSkin skin){
+        user.NameSkin_Inventory().Add(skin.GetName(),skin);
     }
 
     public void CreatePost(User user, Gamemaster master){
@@ -231,8 +261,6 @@ public class Gamemaster {
     }
 
 
-
-
     // Selection
     public void MenuSelectionEvent(User user,Gamemaster master){
         bool EndSelection = false;
@@ -243,19 +271,22 @@ public class Gamemaster {
                     EndSelection = true;
                     appScreen.Profile(user,master);
                     break;
-                case "quest":
-                    PrintNL("Comming soon..");
-                    break;
                 case "dungeon":
                     EndSelection = true;
                     appScreen.Dungeon(user,master);
                     break;
                 case "shop":
-                    PrintNL("Comming soon..");
+                    EndSelection = true;
+                    appScreen.Shop(user,master);
                     break;
                 case "community":
                     EndSelection = true;
                     appScreen.Community(user,master);
+                    break;
+                case "inventory":
+                    EndSelection = true;
+                    Console.Clear();
+                    appScreen.Inventory(user,master);
                     break;
                 case "chat":
                     PrintNL("Comming soon..");

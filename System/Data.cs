@@ -3,7 +3,7 @@ public class Data{
     private Dictionary<string,Post> _post_Data = new Dictionary<string,Post>();
     private Dictionary<string,Stage> _stage_Data = new Dictionary<string,Stage>();
     // private Dictionary<string,Monster> _monster_Data = new Dictionary<string,Monster>();
-
+    
     public int GetUserCount(){
        return _users_Data.Count;
     }
@@ -87,7 +87,7 @@ public class Data{
             --showPostLimit;
 
             Console.WriteLine($"[Post ID:{post.Key}]");
-            Console.WriteLine($"[Username] {post.Value.GetUser().GetUserName()}");
+            Console.WriteLine($"[Username] {post.Value.GetUser().GetUserNameSkin()}");
             Console.WriteLine($"- {post.Value.GetDescription()}");
 
             if (post.Value.GetFile() != "-"){
@@ -107,7 +107,7 @@ public class Data{
             --showPostLimit;
 
             Console.WriteLine($"[Post ID:{post.Key}]");
-            Console.WriteLine($"[Username] {post.Value.GetUser().GetUserName()}");
+            Console.WriteLine($"[Username] {post.Value.GetUser().GetUserNameSkin()}");
             Console.WriteLine($"- {post.Value.GetDescription()}");
 
             if (post.Value.GetFile() != "-"){
