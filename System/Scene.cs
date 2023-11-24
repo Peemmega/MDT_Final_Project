@@ -186,7 +186,7 @@ public class Sceen{
             Console.WriteLine($"[Like : {post.GetLikeCount()}]");
             Console.WriteLine("------- [ Comment ] -------");
             int max = post.GetComment().Count-1;
-            for (int i = max - showPostLimit ; i >= max; i--){
+            for (int i = max - showPostLimit ; i <= max; i++){
                 if (i >= 0 && post.GetComment()[i] != null){
                     Console.WriteLine($"{post.GetComment()[i]}");   
                 }   
